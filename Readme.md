@@ -67,3 +67,18 @@ Because they both need access to the exact same files, we create a shared folder
 
 **Orders and dishes are continuously created and disappear, while ingredients (data) are permanently stored in the warehouse (MariaDB).**
 
+## Dockerfile
+schematic for container image.
+
+## DNS
+docker network inspect inception_intra
+
+Docker automatically registers containers as DNS entries when they are attached to the same network.
+Service name → internal DNS resolution
+Docker DNS works based on the service name.
+
+## DNS process
+1. docker-compose up
+2. Docker creates a network
+3. Services are registered as DNS names
+4. Containers communicate using service names instead of IP addresses
