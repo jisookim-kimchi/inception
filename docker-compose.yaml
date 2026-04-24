@@ -1,0 +1,58 @@
+version: '3.1'
+
+services:
+  mariadb:
+    build: ./srcs/mariadb
+    container_name: mariadb
+    restart: always
+    env_file:
+      - ./srcs/.env
+    networks:
+      - intra
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  wordpress:
+    build: ./srcs/wordpress
+    container_name: wordpress
+    restart: always
+    env_file:
+      - ./srcs/.env
+    depends_on:
+      - mariadb
+    networks:
+      - intra
+    volumes:
+      - wordpress_data:/var/www/html
+    
+  nginx:
+    build: ./srcs/nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+    networks:
+      - intra
+    volumes:
+      - wordpress_data:/var/www/html
+
+networks:
+  intra:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jisokim2/data/mariadb
+
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/jisokim2/data/wordpress
