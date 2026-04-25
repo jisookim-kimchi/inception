@@ -113,8 +113,8 @@ schematic for container image.
     done
     echo "mariadb is ready"
 
-### MariaDB 유저 재설정문제
-  해결 : CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'; 에서 IF NOT EXISTS 추가.
+### MariaDB user redefine problem
+  해결 : CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'; -> CREATED USER IF NOT EXISTS.
 
 ### 3. Service Security (Least Privilege)
 To enhance security, PHP-FPM process is configured to run with the least privileged user, nobody.
