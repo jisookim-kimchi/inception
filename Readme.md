@@ -105,7 +105,7 @@ schematic for container image.
 
 
 ## Troubleshooting
-### 1.MariaDB가 준비되기 전에 WordPress가 실행된 것 (race condition) 이다
+### 1.MariaDB vs Wordpress race condition
   해결 : 
     echo "waiting for mariadb..."
     until mysqladmin ping -h "$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
@@ -116,6 +116,23 @@ schematic for container image.
 ### MariaDB 유저 재설정문제
   해결 : CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'; 에서 IF NOT EXISTS 추가.
 
+### 3. Service Security (Least Privilege)
+To enhance security, PHP-FPM process is configured to run with the least privileged user, nobody.
+user = nobody
+group = nobody
+By using the nobody account, which has minimal system permissions, the potential damage is strictly limited to the WordPress directory.
 
-### 3.
-  RUN sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php82/php-fpm.d/www.conf
+4. PHP-FPM Network Connectivity
+Issue:
+A Connection Refused error occurred when the Nginx container attempted to connect to the WordPress container. The Nginx error log indicated a failure to connect to the upstream: "fastcgi://172.18.0.3:9000".
+
+Cause:
+The default PHP-FPM configuration (www.conf) was set to listen = 127.0.0.1:9000.
+127.0.0.1 : Loopback
+
+Problem: the default is Loopback so PHP-FPM ignored the request coming from Nginx container.
+
+Solution:
+The listen directive was updated to bind to all network interfaces (0,0,0,0), allowing PHP-FPM to accept requests from other containers.
+
+After: listen = 9000 
