@@ -135,3 +135,10 @@ Solution:
 The listen directive was updated to bind to all network interfaces (0,0,0,0), allowing PHP-FPM to accept requests from other containers.
 
 After: listen = 9000 
+
+### 5. env variable reading issue
+  Cause :
+  PHP-FPM's default setting is clearing all environment variables.
+
+  Solution :
+  Add 'clear_env = no' in /etc/php82/php-fpm.d/www.conf
