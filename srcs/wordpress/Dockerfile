@@ -28,14 +28,12 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-# setup.sh 스크립트 복사 및 권한 부여
 COPY tools/setup.sh /setup.sh
 COPY /health.php /tmp/health.php
 COPY tools/www.conf /etc/php82/php-fpm.d/www.conf
 
 RUN chmod +x /setup.sh
 
-# PHP-FPM 기본 포트[www]
 user = nobody
 group = nobody
 
