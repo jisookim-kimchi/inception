@@ -1,5 +1,3 @@
-
-
 ## design
 3 tier architecture
 ```
@@ -67,9 +65,6 @@ Because they both need access to the exact same files, we create a shared folder
 
 **Orders and dishes are continuously created and disappear, while ingredients (data) are permanently stored in the warehouse (MariaDB).**
 
-## Dockerfile
-schematic for container image.
-
 ## DNS
 docker network inspect inception_intra
 
@@ -91,3 +86,19 @@ https://jisookim2.42.fr/health
   encrypt internet communication
   HTTP doesn't encrypt data so data can be exposed to others.
   HTTPS encrypt data so data can't be exposed to others.
+
+## Dockerfile
+schematic for container image.
+
+### Dockerfile Instruction
+- **FROM** : base Image, OS
+- **RUN** : Image build
+- **ADD** : to Add a File or Directory from Host to Image
+- **COPY** : to Copy a File or Directory from Host to Image (preferred),
+    COPY just only copy as same as a file/directory, but ADD can extract tar, zip compressed file automatically.
+- **EXPOSE** : to define port on host
+- **ENV** : to define environment variables
+- **CMD** : to Define a default command to run when the container starts available easy to change.
+- **ENTRYPOINT** : same with CMD but Default command, static command to define main function in container
+- **WORKDIR** : Set the working directory for the subsequent instructions
+- **VOLUME** : to define a path to save persistent data, for non-volatile data
