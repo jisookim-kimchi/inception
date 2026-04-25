@@ -1,10 +1,10 @@
 <?php 
 header('Content-Type: application/json');
 
-$host = "mariadb";                                  #address of Destination.
-$user = getenv('MYSQL_USER'); 
-$pass = getenv('MYSQL_PASSWORD'); 
-$db = getenv('MYSQL_DATABASE');
+$host = getenv('MYSQL_HOST') ?: 'mariadb'; 
+$user = getenv('MYSQL_USER') ?: 'kimchi'; 
+$pass = getenv('MYSQL_PASSWORD') ?: 'haribo249A@'; 
+$db   = getenv('MYSQL_DATABASE') ?: 'wordpress';
 $mysqli = new mysqli($host, $user, $pass, $db);     #make MySQL tunnel to connect to mariadb.
 if ($mysqli->connect_error)
 {

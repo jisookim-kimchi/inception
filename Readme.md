@@ -102,3 +102,16 @@ schematic for container image.
 - **ENTRYPOINT** : same with CMD but Default command, static command to define main function in container
 - **WORKDIR** : Set the working directory for the subsequent instructions
 - **VOLUME** : to define a path to save persistent data, for non-volatile data
+
+
+### Troubleshooting
+MariaDB가 준비되기 전에 WordPress가 실행된 것 (race condition) 이다
+  해결 : 
+    echo "waiting for mariadb..."
+    until mysqladmin ping -h "$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
+        sleep 1
+    done
+    echo "mariadb is ready"
+
+MariaDB 유저 재설정문제
+  해결 : CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'; 에서 IF NOT EXISTS 추가.
