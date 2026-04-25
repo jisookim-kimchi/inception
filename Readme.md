@@ -82,3 +82,12 @@ Docker DNS works based on the service name.
 2. Docker creates a network
 3. Services are registered as DNS names
 4. Containers communicate using service names instead of IP addresses
+
+## health check test
+https://jisookim2.42.fr/health
+
+## SSL
+  Security protocol
+  encrypt internet communication
+  HTTP doesn't encrypt data so data can be exposed to others.
+  HTTPS encrypt data so data can't be exposed to others.
