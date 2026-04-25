@@ -31,9 +31,23 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 # setup.sh 스크립트 복사 및 권한 부여
 COPY tools/setup.sh /setup.sh
 COPY /health.php /tmp/health.php
+COPY tools/www.conf /etc/php82/php-fpm.d/www.conf
+
 RUN chmod +x /setup.sh
-RUN sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php82/php-fpm.d/www.conf
-# PHP-FPM 기본 포트
+
+# PHP-FPM 기본 포트[www]
+user = nobody
+group = nobody
+
+listen = 9000
+
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+
+clear_env = no
 EXPOSE 9000
 
 CMD ["sh", "/setup.sh"]

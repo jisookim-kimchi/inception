@@ -36,6 +36,8 @@ echo "--- CHECKPOINT: START COPYING ---"
 cp -v /tmp/health.php /var/www/html/health.php
 echo "--- CHECKPOINT: END COPYING ---"
 
+chown -R nobody:nobody /var/www/html
+
 exec php-fpm82 -F
     
     
