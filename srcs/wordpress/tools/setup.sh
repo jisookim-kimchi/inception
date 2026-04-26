@@ -38,7 +38,7 @@ echo "--- CHECKPOINT: END COPYING ---"
 
 chown -R nobody:nobody /var/www/html
 
-exec php-fpm82 -F
+exec "$@"
     
     
 

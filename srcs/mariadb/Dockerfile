@@ -1,5 +1,7 @@
 FROM alpine:3.18
- 
+
+WORKDIR /var/lib/mysql
+
 RUN apk update && \                           
     apk add --no-cache mariadb mariadb-client
 
@@ -15,7 +17,9 @@ RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld /var/lib/mysql
 
 EXPOSE 3306
 
-CMD ["sh", "/setup.sh"]
+ENTRYPOINT ["sh", "/setup.sh"]
+
+CMD ["mysqld", "--user=mysql", "--bind-address=0.0.0.0", "--skip-networking=0"]
 
 # run : installation just once when build container
 # CMD : excute whenever container starts

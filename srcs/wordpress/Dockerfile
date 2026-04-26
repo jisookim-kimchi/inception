@@ -1,5 +1,7 @@
 FROM alpine:3.18
 
+WORKDIR /var/www/html
+
 RUN apk update && \
     apk add --no-cache\
     php82 \
@@ -28,24 +30,14 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp
 
-COPY tools/setup.sh /setup.sh
-COPY /health.php /tmp/health.php
 COPY tools/www.conf /etc/php82/php-fpm.d/www.conf
+COPY tools/setup.sh /setup.sh
+COPY health.php /tmp/health.php
 
 RUN chmod +x /setup.sh
 
-user = nobody
-group = nobody
-
-listen = 9000
-
-pm = dynamic
-pm.max_children = 5
-pm.start_servers = 2
-pm.min_spare_servers = 1
-pm.max_spare_servers = 3
-
-clear_env = no
 EXPOSE 9000
 
-CMD ["sh", "/setup.sh"]
+ENTRYPOINT ["sh", "/setup.sh"]
+
+CMD ["php-fpm82", "-F"]
