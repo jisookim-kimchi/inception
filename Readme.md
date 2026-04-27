@@ -150,3 +150,14 @@ After: listen = 9000
 
   Solution :
   Add 'clear_env = no' in /etc/php82/php-fpm.d/www.conf
+
+### 7. Domain Mismatch
+  Issue :
+  The WordPress installation fails.
+  
+  Cause :
+  i tried to test on my laptop so i set to allow localhost in nginx.conf, but not in wordpress config.
+  the browser URL (localhost) does not match the ${WP_URL} defined in the setup script.
+  i can see wordpress pagewhen i go with localhost, it works fine.
+  but when i go to Wordpress installation page, it fails because in wordpress config, i set the URL to ${WP_URL} which is https://jisokim2.42.fr.
+
