@@ -40,7 +40,10 @@ services:
       - wordpress_data:/var/www/html
 
 networks:
-  intra:
+  front:
+    driver: bridge
+
+  back:
     driver: bridge
 
 volumes:
