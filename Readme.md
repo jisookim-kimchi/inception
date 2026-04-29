@@ -125,10 +125,11 @@ schematic for container image.
   Solution : CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'; -> CREATED USER IF NOT EXISTS.
 
 ### 4. Service Security (Least Privilege)
-To enhance security, PHP-FPM process is configured to run with the least privileged user, nobody.
-user = nobody
-group = nobody
-By using the nobody account, which has minimal system permissions, the potential damage is strictly limited to the WordPress directory.
+To enhance security, PHP-FPM process is configured to run with the least privileged user, www-data.
+which is the standard user for running web applications in Linux.
+user = www-data
+group = www-data
+By using the www-data account, which has minimal system permissions, the potential damage is strictly limited to the WordPress directory.
 
 ### 5. PHP-FPM Network Connectivity
 A Connection Refused error occurred when the Nginx container attempted to connect to the WordPress container. The Nginx error log indicated a failure to connect to the upstream: "fastcgi://172.18.0.3:9000".
