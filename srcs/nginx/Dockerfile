@@ -2,6 +2,9 @@ FROM alpine:3.18
 
 WORKDIR /var/www/html
 
+
+RUN addgroup -g 82 -S www-data && \
+    adduser -u 82 -D -S -G www-data www-data
 RUN apk update && \
     apk add --no-cache nginx openssl
 
@@ -15,8 +18,12 @@ RUN openssl req -x509 -nodes -days 365 \
 # Nginx configuration file copy
 COPY tools/nginx.conf /etc/nginx/nginx.conf
 
-# HTTPS port for encrypted communication
+RUN mkdir -p /run/nginx && \
+    chown -R www-data:www-data /var/www/html /run/nginx /var/lib/nginx 
+
 EXPOSE 443
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
+
 

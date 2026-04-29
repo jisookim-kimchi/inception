@@ -2,6 +2,9 @@ FROM alpine:3.18
 
 WORKDIR /var/www/html
 
+RUN addgroup -g 82 -S www-data && \
+    adduser -u 82 -D -S -G www-data www-data
+
 RUN apk update && \
     apk add --no-cache\
     php82 \
