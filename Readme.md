@@ -104,6 +104,7 @@ schematic for container image.
 - **VOLUME** : to define a path to save persistent data, for non-volatile data
 
 
+
 ## Troubleshooting
 
 ### 1. MariaDB init.sql file 

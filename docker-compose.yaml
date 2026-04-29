@@ -4,7 +4,7 @@ services:
     container_name: mariadb
     restart: always
     env_file:
-      - ./srcs/.env
+      - .env
     networks:
       - back
     volumes:
@@ -15,7 +15,7 @@ services:
     container_name: wordpress
     restart: always
     env_file:
-      - ./srcs/.env
+      - .env
     depends_on:
       - mariadb
     networks:
@@ -25,8 +25,13 @@ services:
       - wordpress_data:/var/www/html
     
   nginx:
-    build: ./srcs/nginx
+    build:
+      context: ./srcs/nginx
+      args:
+        - DOMAIN_NAME=${DOMAIN_NAME}
     container_name: nginx
+    env_file:
+      - .env
     restart: always
     ports:
       - "443:443"
