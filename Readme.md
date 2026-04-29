@@ -163,3 +163,14 @@ After: listen = 9000
   i can see wordpress pagewhen i go with localhost, it works fine.
   but when i go to Wordpress installation page, it fails because in wordpress config, i set the URL to ${WP_URL} which is https://jisokim2.42.fr.
 
+## !!!IMPORTANT Principle of Least Privilege!!!
+### 8.User management and permission.
+
+#### Why UID 82 (www-data) Synchronization is important
+Ownership management of shared volumes is the most critical part of this project.
+
+Preventing 'Permission Denied': The Linux identifies permissions by UID (User ID).
+Since Nginx and WordPress share a 'volume', their UIDs must be same to 82 to ensure seamless file access.
+Container default's User is root (UID 0), so when Nginx or WordPress tries to write files as root, it is 
+really dangerous.
+It is dangerous because files created by root inside the container are also owned by root on the host machine.
