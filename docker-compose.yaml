@@ -8,7 +8,7 @@ services:
     networks:
       - back
     volumes:
-      - /home/jisokim2/data/mariadb:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
 
   wordpress:
     build: ./srcs/wordpress
@@ -22,7 +22,7 @@ services:
       - front
       - back
     volumes:
-      - /home/jisokim2/data/wordpress:/var/www/html
+      - wordpress_data:/var/www/html
     
   nginx:
     build:
@@ -40,7 +40,7 @@ services:
     networks:
       - front
     volumes:
-      - /home/jisokim2/data/wordpress:/var/www/html
+      - wordpress_data:/var/www/html
 
 networks:
   front:
