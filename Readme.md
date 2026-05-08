@@ -35,15 +35,15 @@
 version: '3'
 
 services:
-  # define where are containers (e.g. nginx, wordpress, mariadb, ftp)
+  define where are containers (e.g. nginx, wordpress, mariadb, ftp)
 
 networks:
-  # define how the containers talk to each other.
-  # bridge : most common type of network in docker. It is a private network that is created by Docker.
+  define how the containers talk to each other.
+  bridge : most common type of network in docker. It is a private network that is created by Docker.
 
 volumes:
-  # persistent storage (data isn't lost when container is deleted or stop)
-  # then where is my data? docker will automatically create a hidden folder for it on host machine to store the data.
+  persistent storage (data isn't lost when container is deleted or stop)
+  then where is my data? docker will automatically create a hidden folder for it on host machine to store the data.
 
 ```
 
@@ -174,3 +174,13 @@ Since Nginx and WordPress share a 'volume', their UIDs must be same to 82 to ens
 Container default's User is root (UID 0), so when Nginx or WordPress tries to write files as root, it is 
 really dangerous.
 It is dangerous because files created by root inside the container are also owned by root on the host machine.
+
+### 9. Port Forwarding.
+Since the VM uses a virtual NIC in NAT mode, the host and VM are in different network Area.
+To expose services running in the VM to the host, VirtualBox performs NAT port forwarding (destination port translation).
+1. [L7] browser requests https://localhost:8080.
+2. Port Forwarding VirtualBox NAT rewrites : Localhost:8080 -> VM:443.
+3. [L4] TCP segment is created with 443 Port.
+4. [L3] IP packet is forwarded with VM as destination IP.
+5. VM receives Packet.
+6. [L7] nginx accepts and processes request.
