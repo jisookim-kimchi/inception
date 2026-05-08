@@ -1,5 +1,6 @@
 ## design
 3 tier architecture
+
 ```
   Browser <----------> Nginx <---------> WordPress/PHP-FPM <---------> MariaDB
            :443               :9000                          :3306
