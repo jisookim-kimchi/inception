@@ -9,31 +9,29 @@
 ```
 
 ## Container
-```
-I did practice making a Container without Docker.
-https://github.com/jisookim-kimchi/container-build
-```
+I did practice making a Container without Docker.  
+[container-build](https://github.com/jisookim-kimchi/container-build)
 
-## Nginx
-  reverse proxy: 1.client -> nginx
-                  2.nginx -> wordpress
-                  3.wordpress -> nginx-> client
-  load balancer: distributes incoming requests across multiple servers.
-                client1 -> order kimchi request -> A kitchen
-                client2 -> order pasta request -> B kitchen
-                client3 -> order kimbap request -> C kitchen
-                [waiter]
-## mariaDB
+
+## Nginx(Waiter)
+  reverse proxy: 1.client -> nginx  
+                  2.nginx -> wordpress  
+                  3.wordpress -> nginx-> client  
+  
+  load balancer: distributes incoming requests across multiple servers.  
+                client1(waiter1) -> order kimchi request -> A kitchen  
+                client2(waiter2) -> order pasta request -> B kitchen  
+                client3(waiter3) -> order kimbap request -> C kitchen  
+
+## mariaDB(Food Storage)
   Database, smart,large Excel file.
-                [food warehouse]
-## Wordpress and PHP
+
+## Wordpress(Chef) and PHP(Cooking System, Cooking infra)
   Web template, CMS(content management system)
-  depends on mariadb, because Wordpress can't itself store data.
-                [chef]
-  PHP is a web programming language.
-  Wordpress engine.
+  depends on mariadb, because Wordpress can't itself store data.  
+  PHP is a web programming language.  
+  Wordpress is a engine.
   it is like a transfer, it check the sender(Wordpress)'s packet number and send it to the receiver(mariaDB).
-                [cooking system, cooking infra]
 
 
 ## docker-compose.yaml
@@ -86,7 +84,7 @@ Docker DNS works based on the service name.
 4. Containers communicate using service names instead of IP addresses
 
 ## health check test
-https://jisookim2.42.de/health
+curl -k https://jisookim2.42.fr/health
 
 ## SSL
   Security protocol
@@ -117,77 +115,82 @@ schematic for container image.
 ### 1. MariaDB init.sql file 
   Why create a temporary file(init.sql) and pass it to bootstrap?
 
-  In order to connect, the root password must already be set.
-  But at the time of initial installation, there is no password. 
+  In order to connect, the root password must already be set.  
+  But at the time of initial installation, there is no password.  
   So i take the method of setting the password and user in advance before the server opens its doors to the outside (bootstrap)
   
 ### 2.MariaDB vs Wordpress race condition
-  Solution : 
-    echo "waiting for mariadb..."
-    until mysqladmin ping -h "$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
-        sleep 1
-    done
-    echo "mariadb is ready"
+Solution : 
+  echo "waiting for mariadb..."
+  until mysqladmin ping -h "$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
+  sleep 1
+  done
+  echo "mariadb is ready"
 
 ### 3.MariaDB user redefine problem
-  Solution : CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}'; -> CREATED USER IF NOT EXISTS.
+  Solution : CREATE USER '{MYSQL_USER}'@'%' IDENTIFIED BY '{MYSQL_PASSWORD}'; -> CREATED USER IF NOT EXISTS.  
 
 ### 4. Service Security (Least Privilege)
-To enhance security, PHP-FPM process is configured to run with the least privileged user, www-data.
-which is the standard user for running web applications in Linux.
-user = www-data
-group = www-data
-By using the www-data account, which has minimal system permissions, the potential damage is strictly limited to the WordPress directory.
+ To enhance security, PHP-FPM process is configured to run with the least privileged user, www-data.  
+ which is the standard user for running web applications in Linux.  
+ user = www-data  
+ group = www-data  
+ By using the www-data account, which has minimal system permissions, the potential damage is strictly limited to the WordPress directory.  
 
 ### 5. PHP-FPM Network Connectivity
-A Connection Refused error occurred when the Nginx container attempted to connect to the WordPress container. The Nginx error log indicated a failure to connect to the upstream: "fastcgi://172.18.0.3:9000".
+ A Connection Refused error occurred when the Nginx container attempted to connect to the WordPress container.  
+ The Nginx error log indicated a failure to connect to the upstream: "fastcgi://172.18.0.3:9000".  
 
 Cause:
-The default PHP-FPM configuration (www.conf) was set to listen = 127.0.0.1:9000.
-127.0.0.1 : Loopback
+ The default PHP-FPM configuration (www.conf) was set to listen = 127.0.0.1:9000.  
+ 127.0.0.1 : Loopback
 
-Problem: the default is Loopback so PHP-FPM ignored the request coming from Nginx container.
+Problem:
+ the default is Loopback so PHP-FPM ignored the request coming from Nginx container.
 
 Solution:
-The listen directive was updated to bind to all network interfaces (0,0,0,0), allowing PHP-FPM to accept requests from other containers.
+ The listen directive was updated to bind to all network interfaces (0,0,0,0), allowing PHP-FPM to accept requests from other containers.
 
 After: listen = 9000 
 
 ### 6. env variable reading issue
-  Cause :
-  PHP-FPM's default setting is clearing all environment variables.
+Cause :
+ PHP-FPM's default setting is clearing all environment variables.
 
-  Solution :
-  Add 'clear_env = no' in /etc/php82/php-fpm.d/www.conf
+Solution :
+ Add 'clear_env = no' in /etc/php82/php-fpm.d/www.conf
 
 ### 7. Domain Mismatch
-  Issue :
+Issue :
   The WordPress installation fails.
   
-  Cause :
-  i tried to test on my laptop so i set to allow localhost in nginx.conf, but not in wordpress config.
-  the browser URL (localhost) does not match the ${WP_URL} defined in the setup script.
-  i can see wordpress pagewhen i go with localhost, it works fine.
-  but when i go to Wordpress installation page, it fails because in wordpress config, i set the URL to ${WP_URL} which is https://jisokim2.42.fr.
+Cause :
+  i tried to test on my laptop so i set to allow localhost in nginx.conf, but not in wordpress config.  
+  the browser URL (localhost) does not match the {WP_URL}, which is a env Variable in .env file and defined in the setup script.  
+  i can see wordpress pagewhen i go with localhost, it works fine.  
+  but when i go to Wordpress installation page, it fails because in wordpress config, i set the URL to ${WP_URL} which is https://jisokim2.42.fr
+
+Solution:
+  i add also localhost for testing.(currently i change to jisokim2.42.fr)
 
 ## !!!IMPORTANT Principle of Least Privilege!!!
 ### 8.User management and permission.
 
 #### Why UID 82 (www-data) Synchronization is important
-Ownership management of shared volumes is the most critical part of this project.
+Ownership management of shared volumes is the most critical part of this project.  
 
-Preventing 'Permission Denied': The Linux identifies permissions by UID (User ID).
-Since Nginx and WordPress share a 'volume', their UIDs must be same to 82 to ensure seamless file access.
-Container default's User is root (UID 0), so when Nginx or WordPress tries to write files as root, it is 
-really dangerous.
+Preventing 'Permission Denied': The Linux identifies permissions by UID (User ID).  
+Since Nginx and WordPress share a 'volume', their UIDs must be same to 82 to ensure seamless file access.  
+Container default's User is root (UID 0), so when Nginx or WordPress tries to write files as root, it is   
+really dangerous.  
 It is dangerous because files created by root inside the container are also owned by root on the host machine.
 
 ### 9. Port Forwarding.
-Since the VM uses a virtual NIC in NAT mode, the host and VM are in different network Area.
-To expose services running in the VM to the host, VirtualBox performs NAT port forwarding (destination port translation).
-1. [L7] browser requests https://localhost:8080.
-2. Port Forwarding VirtualBox NAT rewrites : Localhost:8080 -> VM:443.
-3. [L4] TCP segment is created with 443 Port.
-4. [L3] IP packet is forwarded with VM as destination IP.
-5. VM receives Packet.
+Since the VM uses a virtual NIC in NAT mode, the host and VM are in different network Area.  
+To expose services running in the VM to the host, VirtualBox performs NAT port forwarding (destination port translation).  
+1. [L7] browser requests https://localhost:8080.  
+2. Port Forwarding VirtualBox NAT rewrites : Localhost:8080 -> VM:443.  
+3. [L4] TCP segment is created with 443 Port.  
+4. [L3] IP packet is forwarded with VM as destination IP.  
+5. VM receives Packet.  
 6. [L7] nginx accepts and processes request.
