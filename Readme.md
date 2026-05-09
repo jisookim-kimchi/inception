@@ -8,6 +8,12 @@
            (external)         (internal)                    (internal)
 ```
 
+## Container
+```
+I did practice making a Container without Docker.
+https://github.com/jisookim-kimchi/container-build
+```
+
 ## Nginx
   reverse proxy: 1.client -> nginx
                   2.nginx -> wordpress
@@ -80,7 +86,7 @@ Docker DNS works based on the service name.
 4. Containers communicate using service names instead of IP addresses
 
 ## health check test
-https://jisookim2.42.fr/health
+https://jisookim2.42.de/health
 
 ## SSL
   Security protocol
