@@ -1,22 +1,27 @@
 #!/bin/sh
 
-if [ ! -d "/var/lib/mysql/mysql/$MYSQL_DATABASE" ]; then
+if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
 
+ echo "========================================="
  echo "DB init........."
+ echo "========================================="
  mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-#init base db in Database 
-mysql -u root << EOF
+cat << EOF > /tmp/init.sql
+FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'%';
-ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('$');
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 FLUSH PRIVILEGES;
-
 EOF
 
+chown mysql:mysql /tmp/init.sql
 
+mysqld --user=mysql --bootstrap < /tmp/init.sql
+ 
 rm -f /tmp/init.sql
+
 
 fi
 

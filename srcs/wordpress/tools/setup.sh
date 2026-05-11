@@ -3,7 +3,7 @@
 if [ ! -f "/var/www/html/wp-config.php" ]; then
 
 echo "waiting for mariadb..."
-until mysqladmin ping -h "$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
+until mysqladmin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
     sleep 1
 done
 echo "mariadb is ready"
@@ -12,7 +12,6 @@ echo "mariadb is ready"
 echo "wordpress init........."
 wp core download --allow-root --path=/var/www/html
 
-# 2. DB 연결 설정 파일(wp-config.php) 생성
  wp config create \
     --allow-root \
     --path=/var/www/html \
@@ -21,7 +20,6 @@ wp core download --allow-root --path=/var/www/html
     --dbpass=${MYSQL_PASSWORD} \
     --dbhost=${MYSQL_HOST}
 
-# 3. WordPress 설치 (관리자 계정 생성)
 wp core install \
     --allow-root \
     --path=/var/www/html \
