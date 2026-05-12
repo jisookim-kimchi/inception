@@ -2,9 +2,7 @@
 
 if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ]; then
 
- echo "========================================="
  echo "DB init........."
- echo "========================================="
  mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 cat << EOF > /tmp/init.sql
