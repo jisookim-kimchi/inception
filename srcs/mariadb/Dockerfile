@@ -2,7 +2,7 @@ FROM alpine:3.18
 
 WORKDIR /var/lib/mysql
 
-RUN apk update && \                           
+RUN apk update && \
     apk add --no-cache mariadb mariadb-client
 
 COPY tools/setup.sh /setup.sh
