@@ -1,32 +1,32 @@
 name = inception
 
 all:
-	@printf "----------------------setup config----------------------\n"
+	@echo "----------------------setup config----------------------\n"
 	@mkdir -p /home/jisokim2/data/mariadb
 	@mkdir -p /home/jisokim2/data/wordpress
 	@docker-compose -f srcs/docker-compose.yaml up -d --build
 
 up:
-	@printf "----------------------starting----------------------\n"
+	@echo "----------------------starting----------------------\n"
 	@docker-compose -f srcs/docker-compose.yaml up -d
 
 down:
-	@printf "----------------------stopping----------------------\n"
+	@echo "----------------------stopping----------------------\n"
 	@docker-compose -f srcs/docker-compose.yaml down
 
 logs:
-	@printf "---------------------showing logs ----------------------\n"
+	@echo "---------------------showing logs ----------------------\n"
 	@docker-compose -f srcs/docker-compose.yaml logs
 
 clean: down
-	@printf "----------------------cleaning----------------------\n"
+	@echo "----------------------cleaning----------------------\n"
 	@docker system prune -a --force
 
 fclean: clean
-	@printf "----------------------fclean----------------------\n"
-	@docker volume rm $$(docker volume ls -q) || true
-	@rm -rf /home/jisokim2/data/mariadb/*
-	@rm -rf /home/jisokim2/data/wordpress/*
+	@echo "----------------------fclean----------------------\n"
+	@if [ -n "$$(docker volume ls -q)" ]; then docker volume rm $$(docker volume ls -q); fi
+	@sudo rm -rf /home/jisokim2/data/mariadb/*
+	@sudo rm -rf /home/jisokim2/data/wordpress/*
 
 re: fclean all
 
