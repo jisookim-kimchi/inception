@@ -92,6 +92,14 @@ curl -k https://jisookim2.42.fr/health
   HTTP doesn't encrypt data so data can be exposed to others.
   HTTPS encrypt data so data can't be exposed to others.
 
+## UFW (uncomplicated firewall)
+UFW is a user-friendly frontend for managing iptables firewall rules.
+In this project, we only allow HTTPS traffic and block HTTP for security.
+- **Allow 443 (HTTPS)**: To enable secure, encrypted web traffic.
+- **Block 80 (HTTP)**: To prevent unencrypted, plaintext communication.
+  
+By strictly managing open ports, we follow the principle of least privilege at the network level, reducing the attack possiblity.
+
 ## Dockerfile
 schematic for container image.
 
