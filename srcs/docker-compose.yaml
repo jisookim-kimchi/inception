@@ -45,9 +45,10 @@ services:
 networks:
   front:
     driver: bridge
-
+    name : front
   back:
     driver: bridge
+    name : back
 
 volumes:
   mariadb_data:
