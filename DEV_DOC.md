@@ -61,14 +61,14 @@ If you need to debug something:
 - `docker logs <container_name>` : shows the logs of a container
 - `docker exec -it <container_name> sh` : opens a shell inside the container
 - `docker volume ls` : lists all docker volumes
-- `docker ps` :
-- `docker stats` :
-- `docker system df` : 
-- `docker inspect <conatiner name>` :
-- `docker port <conatiner name>` :
-- `docker network ls` : `docker network insepct <bridge name>`
-- `docker compose -f <path> top` : 
-- `docker run --rm --network <network_name> alpine nslookup <service_name>` :
+- `docker ps` : lists all currently running containers
+- `docker stats` : displays a live stream of container resource usage statistics (CPU, RAM)
+- `docker system df` : shows how much disk space Docker is using (images, containers, volumes)
+- `docker inspect <container_name>` : shows detailed low-level information (IP addresses, mounts, etc.)
+- `docker port <container_name>` : lists port mappings for the container
+- `docker network ls` / `docker network inspect <network_name>` : lists networks / shows detailed info about a specific network
+- `docker compose -f <path> top` : displays the running processes of all containers in the compose file.
+- `docker run --rm --network <network_name> alpine nslookup <service_name>` : tests internal DNS resolution to check if containers can see each other on a specific network
 
 ## 4. Data persistence
 When containers are deleted, their data is usually lost.  
