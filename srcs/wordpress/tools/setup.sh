@@ -20,6 +20,11 @@ wp core download --allow-root --path=/var/www/html
     --dbpass=${MYSQL_PASSWORD} \
     --dbhost=${MYSQL_HOST}
 
+sed -i "/table_prefix = 'wp_';/a \
+define( 'WP_HOME', 'https://${DOMAIN_NAME}' );\n\
+define( 'WP_SITEURL', 'https://${DOMAIN_NAME}' );\n\
+define( 'FORCE_SSL_ADMIN', true );" /var/www/html/wp-config.php
+
 wp core install \
     --allow-root \
     --path=/var/www/html \
@@ -28,8 +33,6 @@ wp core install \
     --admin_user=${WP_ADMIN} \
     --admin_password=${WP_ADMIN_PASSWORD} \
     --admin_email=${WP_ADMIN_EMAIL}
-wp config set WP_HOME "https://${DOMAIN_NAME}" --allow-root --path=/var/www/html
-wp config set WP_SITEURL "https://${DOMAIN_NAME}" --allow-root --path=/var/www/html
 fi
 
 echo "--- CHECKPOINT: START COPYING ---"
