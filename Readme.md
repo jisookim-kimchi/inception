@@ -61,7 +61,7 @@ Alpine takes up way less hard drive space and downloads instantly. So I will tak
 **Note:** Alpine uses `apk add` instead of `apt-get install`.
 
 ## volume
-**WordPress** (PHP-FPM) needs the website files so it can execute the PHP code.
+**WordPress** `(PHP-FPM)` needs the website files so it can execute the PHP code.
 
 **Nginx** needs the exact same website files so it can send images, CSS, and HTML directly to client.
 Because they both need access to the exact same files, we create a shared folder (a Docker Volume) and mount it into both containers, in this case at /var/www/html
@@ -71,14 +71,14 @@ Because they both need access to the exact same files, we create a shared folder
 **Orders and dishes are continuously created and disappear, while ingredients (data) are permanently stored in the warehouse (MariaDB).**
 
 ## DNS
-docker network inspect inception_intra
+docker network inspect <network name>
 
 Docker automatically registers containers as DNS entries when they are attached to the same network.
-Service name → internal DNS resolution
+`Service name → internal DNS resolution`
 Docker DNS works based on the service name.
 
 ## DNS process
-1. docker-compose up
+1. docker service start
 2. Docker creates a network
 3. Services are registered as DNS names
 4. Containers communicate using service names instead of IP addresses
