@@ -66,7 +66,6 @@ I did practice making a Container without Docker.
   Wordpress is a engine.
   it is like a transfer, it check the sender(Wordpress)'s packet number and send it to the receiver(mariaDB).
 
-
 ## docker-compose.yaml
 
 ```yaml
