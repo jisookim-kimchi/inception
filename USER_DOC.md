@@ -9,7 +9,6 @@ This project runs three main services using Docker:
 ## 2. How to start and stop
 You can control the project using the Makefile in the `Inception` directory.
 
-
 To build the images and run the containers:
 ```
 make all

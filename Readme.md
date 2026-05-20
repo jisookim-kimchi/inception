@@ -1,5 +1,9 @@
-## design
-3 tier architecture
+*This project has been created as part of the 42 curriculum by jisookim.*
+
+## Description
+This project focuses on system administration by setting up a multi-container Docker infrastructure. The goal is to build a containerized environment running Alpine Linux with a 3-tier architecture: Nginx (TLS), WordPress/PHP-FPM, and MariaDB.
+
+### 3 tier architecture
 
 ```
   Browser <----------> Nginx <---------> WordPress/PHP-FPM <---------> MariaDB
@@ -7,6 +11,35 @@
            HTTPS               FastCGI                        TCP
            (external)         (internal)                    (internal)
 ```
+
+### Virtual Machines vs Docker
+* **Virtual Machines**: Virtualize physical hardware. 
+Each VM runs a full guest OS with its own kernel and virtual hardware. 
+This guarantees isolation but results in massive RAM/CPU overhead and slow boot times.
+* **Docker**: Virtualizes the OS kernel. 
+Containers share the host OS kernel and run as isolated processes. 
+This offers near-native execution speed, instant startup, and tiny resource footprints.
+
+### Secrets vs Environment Variables
+* **Environment Variables**: Good for general configuration, but insecure for passwords or keys. 
+Anyone with container access can read them in plaintext via `docker inspect` or dump them from process lists.
+* **Secrets**: Secure storage for credentials. 
+Docker mounts them as temp in-memory files (`/run/secrets/`) inside the container. 
+They don't write to host storage, preventing leaks in metadata, logs, or image layers.
+
+### Docker Network vs Host Network
+* **Host Network**: Bypasses network isolation. 
+The container shares the host's network namespace directly, exposing all ports to the outside. 
+This increases conflict risks and removes boundary control.
+* **Docker Network (Bridge)**: Creates a private virtual network. 
+Containers isolate from the host and communicate with each other securely using container/service names resolved by Docker's internal DNS. 
+Ports are only exposed if explicitly published.
+
+### Docker Volumes vs Bind Mounts
+* **Bind Mounts**: Directly link a specific host path to the container. 
+Highly dependent on the host OS file structure and permission settings, which causes permission syncing issues (especially across different OS/UIDs).
+* **Docker Volumes**: Storage areas managed entirely by Docker on the host. Isolated from host directory paths, making them OS-independent, easier to back up, and highly portable.
+
 
 ## Container
 I did practice making a Container without Docker.  
@@ -174,7 +207,7 @@ Cause :
   i tried to test on my laptop so i set to allow localhost in nginx.conf, but not in wordpress config.  
   the browser URL (localhost) does not match the {WP_URL}, which is a env Variable in .env file and defined in the setup script.  
   i can see wordpress pagewhen i go with localhost, it works fine.  
-  but when i go to Wordpress installation page, it fails because in wordpress config, i set the URL to ${WP_URL} which is https://jisokim2.42.fr
+  but when i go to WordPress installation page, it fails because in wordpress config, i set the URL to ${WP_URL} which is https://jisokim2.42.fr
 
 Solution:
   i add also localhost for testing.(currently i change to jisokim2.42.fr)
@@ -200,3 +233,32 @@ To expose services running in the VM to the host, VirtualBox performs NAT port f
 4. [L3] IP packet is forwarded with VM as destination IP.  
 5. VM receives Packet.  
 6. [L7] nginx accepts and processes request.
+
+## Instructions
+To build and run the multi-container environment:
+1. Setup your host's `/etc/hosts` file:
+   ```bash
+   echo "127.0.0.1 jisookim2.42.fr" | sudo tee -a /etc/hosts
+   ```
+2. Build and run the containers using the Makefile:
+   ```bash
+   make
+   ```
+3. Stop the services:
+   ```bash
+   make down
+   ```
+4. Perform a complete cleanup:
+   ```bash
+   make fclean
+   ```
+
+## Resources
+- [Docker Compose Documentation](https://github.com/docker/getting-started/blob/master/docs/tutorial/using-docker-compose/index.md)
+- [Docker tutorial](https://www.youtube.com/watch?v=pg19Z8LL06w&t=3618s)
+- [Alpine Package Search](https://pkgs.alpinelinux.org/packages)
+- [Nginx Documentation](https://nginx.org/en/docs/)
+
+### AI Usage Disclosure
+- **Troubleshooting**: AI was utilized to debug network binding issues with PHP-FPM, resolve host-container volume permission mappings (UID 82 alignment).
+- **Learning Tool**: :AI was also used as a learning aid to explain unfamiliar concepts and support deeper understanding.
