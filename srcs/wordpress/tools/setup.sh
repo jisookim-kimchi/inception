@@ -21,10 +21,10 @@ php -d memory_limit=-1 /usr/local/bin/wp config create \
     --dbpass=${MYSQL_PASSWORD} \
     --dbhost=${MYSQL_HOST}
 
-sed -i "/table_prefix = 'wp_';/a \
-define( 'WP_HOME', 'https://${DOMAIN_NAME}' );\n\
-define( 'WP_SITEURL', 'https://${DOMAIN_NAME}' );\n\
-define( 'FORCE_SSL_ADMIN', true );" /var/www/html/wp-config.php
+php -d memory_limit=-1 /usr/local/bin/wp config set WP_HOME "https://${DOMAIN_NAME}" --allow-root --path=/var/www/html
+php -d memory_limit=-1 /usr/local/bin/wp config set WP_SITEURL "https://${DOMAIN_NAME}" --allow-root --path=/var/www/html
+php -d memory_limit=-1 /usr/local/bin/wp config set FORCE_SSL_ADMIN true --raw --allow-root --path=/var/www/html
+echo "wordpress config set\n"
 
 echo "creating wordpress admin.........\n"
 php -d memory_limit=-1 /usr/local/bin/wp core install \
