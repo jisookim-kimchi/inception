@@ -17,6 +17,10 @@ RUN apk update && \
     php-xml \
     php-phar \
     php-iconv \
+    php-openssl \
+    php-ctype \
+    php-zip \
+    php-gd \
     mariadb-client \
     wget
 

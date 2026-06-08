@@ -53,6 +53,6 @@ chown -R www-data:www-data /var/www/html
 
 REAL_FPM=$(which php-fpm || which php-fpm8 || ls /usr/sbin/php-fpm* | head -n 1)
 
-echo "Starting WordPress FPM with: $REAL_FPM"
+echo "Starting WordPress FPM"
 
 exec $REAL_FPM -F
