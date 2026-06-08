@@ -10,9 +10,10 @@ echo "mariadb is ready"
 
 
 echo "wordpress init........."
-wp core download --allow-root --path=/var/www/html
 
- wp config create \
+php -d memory_limit=-1 /usr/local/bin/wp core download --allow-root --path=/var/www/html
+
+php -d memory_limit=-1 /usr/local/bin/wp config create \
     --allow-root \
     --path=/var/www/html \
     --dbname=${MYSQL_DATABASE} \
@@ -26,7 +27,7 @@ define( 'WP_SITEURL', 'https://${DOMAIN_NAME}' );\n\
 define( 'FORCE_SSL_ADMIN', true );" /var/www/html/wp-config.php
 
 echo "creating wordpress admin.........\n"
-wp core install \
+php -d memory_limit=-1 /usr/local/bin/wp core install \
     --allow-root \
     --path=/var/www/html \
     --url=${WP_URL} \
@@ -36,13 +37,11 @@ wp core install \
     --admin_email=${WP_ADMIN_EMAIL}
 
 echo "creating regular wordpress user.........\n"
-wp user create \
+php -d memory_limit=-1 /usr/local/bin/wp user create "${WP_USER}" "${WP_USER_EMAIL}"\
     --allow-root \
     --path=/var/www/html \
-    "${WP_USER}" \
-    "${WP_USER_EMAIL}" \
-    --role=author \
     --user_pass="${WP_USER_PASSWORD}" \
+    --role=author
 
 fi
 
@@ -52,8 +51,8 @@ echo "--- CHECKPOINT: END COPYING ---"
 
 chown -R www-data:www-data /var/www/html
 
-exec "$@"
-    
-    
+REAL_FPM=$(which php-fpm || which php-fpm8 || ls /usr/sbin/php-fpm* | head -n 1)
 
+echo "Starting WordPress FPM with: $REAL_FPM"
 
+exec $REAL_FPM -F
