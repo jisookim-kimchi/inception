@@ -9,6 +9,7 @@ RUN apk update && \
     apk add --no-cache\
     php \
     php-fpm \
+    php-tokenizer \
     php-mysqli \
     php-json \
     php-curl \
@@ -26,7 +27,7 @@ RUN apk update && \
 
 ENV WP_CLI_PHP_ARGS="-d memory_limit=-1"
 
-RUN mkdir -p /etc/php83/conf.d && echo "memory_limit = 512M" > /etc/php83/conf.d/memory.ini
+RUN mkdir -p /etc/php84/conf.d && echo "memory_limit = 512M" > /etc/php84/conf.d/memory.ini
 
 # Install wp-cli (WordPress automatic installation tool)
 # Why change the name? /usr/local/bin is a collection of commands that can be executed from anywhere. 
@@ -35,7 +36,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     && mv wp-cli.phar /usr/local/bin/wp
 
 #RUN mkdir -p /etc/php83/php-fpm.d
-COPY tools/www.conf /etc/php83/php-fpm.d/www.conf
+COPY tools/www.conf /etc/php84/php-fpm.d/www.conf
 COPY tools/setup.sh /setup.sh
 COPY health.php /tmp/health.php
 
